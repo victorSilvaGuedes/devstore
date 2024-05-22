@@ -1,10 +1,11 @@
+import { AddToCartButton } from '@/components/addToCartButton'
 import { api } from '@/data/api'
 import { Product as ProductType } from '@/data/types/product'
 import { Metadata } from 'next'
 import Image from 'next/image'
 
 async function getProduct(slug: string): Promise<ProductType> {
-  // recupera os produtos featured
+  // recupera o produto baseado em seu slug
   const response = await api(`/products/${slug}`, {
     // a cada uma hora a api será executada, mantendo os dados já guardados em cache
     next: { revalidate: 60 * 60 },
@@ -15,6 +16,7 @@ async function getProduct(slug: string): Promise<ProductType> {
   return product
 }
 
+// gerar o title para a página, exportando o nome do produto
 export async function generateMetadata({
   params,
 }: {
@@ -22,6 +24,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const product = await getProduct(params.slug)
   return { title: product.title }
+}
+
+// criando a geração estática para a páginas dos produtos featured
+// cria uma versão em cache das páginas da aplicação antes de serem publicadas
+// isso significa que quando um usuário acessar uma página, ela será exibida de forma instantânea
+// sem a necessidade de fazer requisições adicionais
+export async function generateStaticParams() {
+  const response = await api('/products/featured')
+  const products: ProductType[] = await response.json()
+
+  return products.map((product) => {
+    return { slug: product.slug }
+  })
 }
 
 export default async function Product({
@@ -97,12 +112,7 @@ export default async function Product({
             </button>
           </div>
 
-          <button
-            type="button"
-            className="mt-4 rounded-full h-12 bg-emerald-800 font-semibold hover:scale-105 transition-transform duration-150"
-          >
-            Adicionar ao carrinho
-          </button>
+          <AddToCartButton productId={product.id} />
         </div>
       </div>
     </div>
