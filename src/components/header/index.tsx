@@ -1,8 +1,10 @@
-'use client'
 import Link from 'next/link'
-import { InputFocusBlur } from '../input'
-import { Search, ShoppingBag, UserRound } from 'lucide-react'
+
+import { UserRound } from 'lucide-react'
 import { TextAnimatedDecoration } from '../textAnimatedDecoration'
+import { CartWidget } from './cart-widget'
+import { Toaster } from 'sonner'
+import { SearchForm } from '../searchForm'
 
 export function Header() {
   return (
@@ -15,17 +17,10 @@ export function Header() {
           devstore
         </Link>
 
-        <form className="w-[320px]">
-          <InputFocusBlur placeholder="Buscar produtos...">
-            <Search />
-          </InputFocusBlur>
-        </form>
+        <SearchForm />
       </div>
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <ShoppingBag size={16} className="text-violet-500" />
-          <TextAnimatedDecoration>Cart (0)</TextAnimatedDecoration>
-        </div>
+        <CartWidget />
 
         <div className="w-0.5 h-4 bg-violet-500" />
 
@@ -33,6 +28,8 @@ export function Header() {
           <TextAnimatedDecoration>Account</TextAnimatedDecoration>
           <UserRound size={16} className="text-violet-500" />
         </Link>
+
+        <Toaster position="bottom-left" theme="dark" />
       </div>
     </header>
   )
