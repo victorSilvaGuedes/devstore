@@ -5,6 +5,7 @@ import { TextAnimatedDecoration } from '../textAnimatedDecoration'
 import { CartWidget } from './cart-widget'
 import { Toaster } from 'sonner'
 import { SearchForm } from '../searchForm'
+import { Suspense } from 'react'
 
 export function Header() {
   return (
@@ -17,7 +18,9 @@ export function Header() {
           devstore
         </Link>
 
-        <SearchForm />
+        <Suspense fallback={null}>
+          <SearchForm />
+        </Suspense>
       </div>
       <div className="flex items-center gap-4">
         <CartWidget />
