@@ -22,8 +22,7 @@ jobs:
 
       - name: Get pnpm store directory
         shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
   
       - uses: actions/cache@v3
         name: Setup pnpm cache
@@ -32,14 +31,23 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
+      - name: Build application
+        run: npm run build
+
+      - name: Start application
+        run: npm start &
         env: 
           APP_URL: "http://localhost:3000"
-          NEXT_PUBLIC_API_BASE_URL: "https://ignite-devstore-api.vercel.app"
+          NEXT_PUBLIC_API_BASE_URL: "https://devstore-api-victor-silva-guedes-projects.vercel.app/"
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
         with:
-          build: npm run build
           start: npm start
+        env: 
+          APP_URL: "http://localhost:3000"
+          NEXT_PUBLIC_API_BASE_URL: "https://devstore-api-victor-silva-guedes-projects.vercel.app/"
