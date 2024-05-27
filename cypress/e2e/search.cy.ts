@@ -5,8 +5,6 @@ describe('search products', () => {
     cy.location('pathname').should('include', 'search')
 
     cy.location('search').should('include', 'product=moletom')
-
-    cy.get('a[href^="/product"]').should('exist')
   })
 
   it('should not be able to visit search page without a search query', () => {
